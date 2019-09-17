@@ -36,12 +36,23 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
     getFromHistory().then((value) => setState(() {
           historyWord = value;
           String word;
-          listView = _myListView(context,historyWord,word);
+          listView = _myListView(context, historyWord, word);
         }));
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
+        actions: <Widget>[
+          FloatingActionButton(
+            backgroundColor: Colors.purple[900],
+            onPressed: () {},
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
+          ),
+        ],
         title: Text("History"),
         backgroundColor: Colors.purple[900],
       ),
@@ -66,14 +77,6 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
                     MaterialPageRoute(builder: (context) => mainPage.MyApp()));
               },
             ),
-            FloatingActionButton(
-              backgroundColor: Colors.deepPurple[400],
-              onPressed: () {},
-              child: Icon(
-                Icons.delete,
-                color: Colors.white,
-              ),
-            ),
           ],
         ),
       ),
@@ -88,28 +91,18 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
     //.});
   }
 }
+
 Widget _myListView(BuildContext context, List wordList, String word) {
-  if (word != null && wordList.length > 0) {
-    return ListView.builder(
+  return ListView.builder(
       itemCount: wordList.length,
       itemBuilder: (context, index) {
-        if (word == wordList[index]["wordEn"]) {
-          return ListTile(
-              title:
-                  Text(wordList[index]["wordTr"], textAlign: TextAlign.center));
-        } else {
-          return ListTile(
-              title: Text(" Tr - En    " + wordList[index]["wordEn"],
-                  textAlign: TextAlign.center));
-        }
-      },
-    );
-  } else {
-    return ListView(children: <Widget>[
-      ListTile(
-          title: Text(
-              "KELİME SÖZLÜKTE BULUNAMADI \n WORD NOT FOUND IN DICTIONARY.",
-              textAlign: TextAlign.center)),
-    ]);
-  }
+        // if (word == wordList[index]["wordEn"]) {
+        //   return ListTile(
+        //       title:
+        //           Text(wordList[index]["wordEn"], textAlign: TextAlign.center));
+        // } else {
+        return ListTile(
+            title:
+                Text(wordList[index]["wordEn"], textAlign: TextAlign.center));
+      });
 }
