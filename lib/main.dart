@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:dictapp/favorites.dart' as favPage;
 import 'package:dictapp/history.dart' as historyPage;
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String sonuc = "";
   List result = new List();
   ListView listView = ListView();
+  List<String> historyList = new List<String>();
   final word = new TextEditingController();
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -46,20 +48,23 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(100, 0, 100, 100),
+          padding: EdgeInsets.fromLTRB(50, 30, 50, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               LogoImageWidget(),
-              TextField(
-                controller: word,
-                decoration: InputDecoration(
-                  hintText: "Kelime Giriniz / Enter Word",
-                  contentPadding: EdgeInsets.fromLTRB(5, 15, 5, 5),
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: const BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                child: TextField(
+                  controller: word,
+                  decoration: InputDecoration(
+                    hintText: "Kelime Giriniz / Enter Word",
+                    contentPadding: EdgeInsets.fromLTRB(10, 15, 10, 5),
+                    enabledBorder: const OutlineInputBorder(
+                      borderSide: const BorderSide(
+                        color: Colors.orange,
+                        width: 2.0,
+                      ),
                     ),
                   ),
                 ),
@@ -72,17 +77,41 @@ class _MyHomePageState extends State<MyHomePage> {
                 '',
                 style: optionStyle,
               ),
-              RaisedButton(
+              FloatingActionButton(
+                backgroundColor: Colors.deepPurple[400],
                 onPressed: () {
+                  // showDialog(
+                  //   context: context,
+                  //   builder: (BuildContext context) {
+                  //     return AlertDialog(
+                  //       title: new Text("Dictionary"),
+                  //       content: new Text("Alert Dialog body"),
+                  //       actions: <Widget>[
+                  //         SimpleDialogOption(
+                  //           onPressed: (){
+                  //             _translate(word.text);
+                  //           },
+                  //         ),
+                  //         new FlatButton(
+                  //           child: new Text("Close"),
+                  //           onPressed: () {
+                  //             Navigator.of(context).pop();
+                  //           },
+                  //         ),
+                  //       ],
+                  //     );
+                  //   },
+                  // );
                   _translate(word.text);
                 },
-                child: Text("Çevir / Translate"),
-                textColor: Colors.white,
-                color: Colors.blueGrey[800],
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
+                child: Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
               ),
-              Expanded(child: listView,),
+              Expanded(
+                child: listView,
+              ),
             ],
           ),
         ),
@@ -120,24 +149,26 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
   }
-    _translate(String word) async {
-    String url =
-        "https://dictionaryapplication.azurewebsites.net/api/word";
+
+  _translate(String word) async {
+    String url = "https://dictionaryapplication.azurewebsites.net/api/word";
     url = url + "/" + word;
-        var response = await http.get(Uri.encodeFull(url), headers: {
+    var response = await http.get(Uri.encodeFull(url), headers: {
       "Accept": "application/json",
     });
     print(response);
     setState(() {
       result = json.decode(response.body);
       listView = _myListView(context, result, word);
+      historyList.add(word);
+      addToHistory(historyList);
     });
   }
 }
 
 Future navigateToMyHomePage(context) async {
   Navigator.push(
-      context, MaterialPageRoute(builder: (context) => historyPage.SubPage()));
+      context, MaterialPageRoute(builder: (context) => historyPage.MyHistoryPage()));
 }
 
 Future navigateToMyHomePages(context) async {
@@ -145,14 +176,24 @@ Future navigateToMyHomePages(context) async {
       context, MaterialPageRoute(builder: (context) => favPage.SubPage()));
 }
 
+Future<bool> addToHistory(List<String> value) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setStringList("history", value);
+}
+
+Future<List<String>> getFromHistory() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getStringList("history");
+}
+
 class LogoImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    AssetImage logoAsset = AssetImage("images/dict.jpg");
+    AssetImage logoAsset = AssetImage("images/purple.png");
     Image image = Image(
       image: logoAsset,
-      width: 400.0,
-      height: 350.0,
+      width: 300.0,
+      height: 200.0,
     );
     return Container(child: image);
   }
@@ -165,12 +206,11 @@ Widget _myListView(BuildContext context, List wordList, String word) {
       itemBuilder: (context, index) {
         if (word == wordList[index]["wordEn"]) {
           return ListTile(
-              title: Text(wordList[index]["wordTr"],
-                  textAlign: TextAlign.center));
+              title:
+                  Text(wordList[index]["wordTr"], textAlign: TextAlign.center));
         } else {
           return ListTile(
-
-              title: Text(" TR -> EN    "+wordList[index]["wordEn"],
+              title: Text(" Tr - En    " + wordList[index]["wordEn"],
                   textAlign: TextAlign.center));
         }
       },
@@ -178,7 +218,8 @@ Widget _myListView(BuildContext context, List wordList, String word) {
   } else {
     return ListView(children: <Widget>[
       ListTile(
-          title: Text("KELİME SÖZLÜKTE BULUNAMADI \n WORD NOT FOUND IN DICTIONARY.",
+          title: Text(
+              "KELİME SÖZLÜKTE BULUNAMADI \n WORD NOT FOUND IN DICTIONARY.",
               textAlign: TextAlign.center)),
     ]);
   }

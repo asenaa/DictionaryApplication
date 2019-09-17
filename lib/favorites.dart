@@ -15,8 +15,10 @@ class SubPage extends StatelessWidget {
             Text('Click button to back to Search Page'),
             RaisedButton(
               textColor: Colors.white,
-              color: Colors.blueGrey[800],
+              color: Colors.orange,
               child: Text('Back to Search Page'),
+              shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30)),
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
               },
