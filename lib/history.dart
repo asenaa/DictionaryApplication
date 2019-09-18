@@ -34,9 +34,8 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
   @override
   Widget build(BuildContext context) {
     getFromHistory().then((value) => setState(() {
+          listView = _myListView(context, historyWord);
           historyWord = value;
-          String word;
-          listView = _myListView(context, historyWord, word);
         }));
     return Scaffold(
       backgroundColor: Colors.white,
@@ -50,7 +49,8 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
               Icons.delete,
               color: Colors.white,
             ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(40.0))),
           ),
         ],
         title: Text("History"),
@@ -60,16 +60,15 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Click button to back to Search Page'),
-            Text(
-                //controller: key,
-                historyWord != null && historyWord.length > 0
-                    ? historyWord[0]
-                    : "history empty"),
+            Padding(padding: EdgeInsets.fromLTRB(50, 100, 5, 5),),
+            Expanded(
+              child: listView,
+            ),
+            Padding(padding: EdgeInsets.fromLTRB(50, 100, 5, 5),),
             RaisedButton(
               textColor: Colors.white,
               color: Colors.orange,
-              child: Text('Back to Search Page'),
+              child: Text('Search Page'),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30)),
               onPressed: () {
@@ -77,32 +76,29 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
                     MaterialPageRoute(builder: (context) => mainPage.MyApp()));
               },
             ),
+            Padding(padding: EdgeInsets.fromLTRB(50, 60, 5, 0),),
           ],
         ),
       ),
     );
   }
-
   Future<List<String>> getFromHistory() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //bool CheckValue = prefs.('value');
-    //setState(() {
     return prefs.getStringList("history").cast<String>();
-    //.});
   }
 }
 
-Widget _myListView(BuildContext context, List wordList, String word) {
-  return ListView.builder(
-      itemCount: wordList.length,
-      itemBuilder: (context, index) {
-        // if (word == wordList[index]["wordEn"]) {
-        //   return ListTile(
-        //       title:
-        //           Text(wordList[index]["wordEn"], textAlign: TextAlign.center));
-        // } else {
-        return ListTile(
-            title:
-                Text(wordList[index]["wordEn"], textAlign: TextAlign.center));
-      });
+Widget _myListView(BuildContext context, List wordList) {
+  if (wordList != null && wordList.length > 0) {
+    return ListView.builder(
+        itemCount: wordList.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+              title: Text(wordList[index], textAlign: TextAlign.center));
+        });
+  } else {
+    return ListView(children: <Widget>[
+      ListTile(title: Text("History Empty!", textAlign: TextAlign.center)),
+    ]);
+  }
 }

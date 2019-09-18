@@ -80,28 +80,6 @@ class _MyHomePageState extends State<MyHomePage> {
               FloatingActionButton(
                 backgroundColor: Colors.deepPurple[400],
                 onPressed: () {
-                  // showDialog(
-                  //   context: context,
-                  //   builder: (BuildContext context) {
-                  //     return AlertDialog(
-                  //       title: new Text("Dictionary"),
-                  //       content: new Text("Alert Dialog body"),
-                  //       actions: <Widget>[
-                  //         SimpleDialogOption(
-                  //           onPressed: (){
-                  //             _translate(word.text);
-                  //           },
-                  //         ),
-                  //         new FlatButton(
-                  //           child: new Text("Close"),
-                  //           onPressed: () {
-                  //             Navigator.of(context).pop();
-                  //           },
-                  //         ),
-                  //       ],
-                  //     );
-                  //   },
-                  // );
                   _translate(word.text);
                 },
                 child: Icon(
@@ -167,8 +145,8 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Future navigateToMyHomePage(context) async {
-  Navigator.push(
-      context, MaterialPageRoute(builder: (context) => historyPage.MyHistoryPage()));
+  Navigator.push(context,
+      MaterialPageRoute(builder: (context) => historyPage.MyHistoryPage()));
 }
 
 Future navigateToMyHomePages(context) async {
