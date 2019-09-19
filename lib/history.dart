@@ -129,7 +129,7 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
 
 Future navigateToMyHomePage(context) async {
   Navigator.push(
-      context, MaterialPageRoute(builder: (context) => mainPage.MyApp()));
+      context, MaterialPageRoute(builder: (context) => mainPage.MyApp()));   
 }
 
 Future navigateToMyHomePagess(context) async {
