@@ -1,6 +1,7 @@
-import 'package:dictapp/main.dart' as mainPage;
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dictapp/favorites.dart' as favPage;
+import 'package:dictapp/main.dart' as mainPage;
 
 void main() => runApp(MyApp());
 
@@ -28,6 +29,7 @@ class MyHistoryPage extends StatefulWidget {
 }
 
 class _MyHistoryPageState extends State<MyHistoryPage> {
+  int _selectedIndex = 1;
   ListView listView = ListView();
   List<String> historyWord = new List<String>();
 
@@ -60,12 +62,16 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(padding: EdgeInsets.fromLTRB(50, 100, 5, 5),),
+            Padding(
+              padding: EdgeInsets.fromLTRB(50, 100, 5, 5),
+            ),
             Expanded(
               child: listView,
             ),
-            Padding(padding: EdgeInsets.fromLTRB(50, 100, 5, 5),),
-            RaisedButton(
+            Padding(
+              padding: EdgeInsets.fromLTRB(50, 100, 50, 5),
+            ),
+            /*RaisedButton(
               textColor: Colors.white,
               color: Colors.orange,
               child: Text('Search Page'),
@@ -75,17 +81,60 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => mainPage.MyApp()));
               },
-            ),
-            Padding(padding: EdgeInsets.fromLTRB(50, 60, 5, 0),),
+            ),*/
+            // Padding(
+            //   padding: EdgeInsets.fromLTRB(50, 60, 5, 0),
+            // ),
           ],
         ),
       ),
+            bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            title: Text('Search'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            title: Text('History'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            title: Text('Favorites'),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.purple[900],
+        onTap: _onItemTapped,
+      ),
     );
   }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      if (index == 0) {
+        navigateToMyHomePage(context);
+      }
+      if (index == 2) {
+        navigateToMyHomePagess(context);
+      }
+    });
+  }
+}
   Future<List<String>> getFromHistory() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList("history").cast<String>();
+    return prefs.getStringList("history");
   }
+
+Future navigateToMyHomePage(context) async {
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => mainPage.MyApp()));
+}
+
+Future navigateToMyHomePagess(context) async {
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => favPage.MyFavPage()));
 }
 
 Widget _myListView(BuildContext context, List wordList) {
@@ -94,7 +143,8 @@ Widget _myListView(BuildContext context, List wordList) {
         itemCount: wordList.length,
         itemBuilder: (context, index) {
           return ListTile(
-              title: Text(wordList[index], textAlign: TextAlign.center));
+            title: Text(wordList[index], textAlign: TextAlign.center,),
+          );
         });
   } else {
     return ListView(children: <Widget>[

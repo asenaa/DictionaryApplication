@@ -54,11 +54,11 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               LogoImageWidget(),
               Padding(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: TextField(
                   controller: word,
                   decoration: InputDecoration(
-                    hintText: "Kelime Giriniz / Enter Word",
+                    hintText: "Search",
                     contentPadding: EdgeInsets.fromLTRB(10, 15, 10, 5),
                     enabledBorder: const OutlineInputBorder(
                       borderSide: const BorderSide(
@@ -120,10 +120,10 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _selectedIndex = index;
       if (index == 1) {
-        navigateToMyHomePage(context);
+        navigateToMyHomePages(context);
       }
       if (index == 2) {
-        navigateToMyHomePages(context);
+        navigateToMyHomePagess(context);
       }
     });
   }
@@ -135,23 +135,33 @@ class _MyHomePageState extends State<MyHomePage> {
       "Accept": "application/json",
     });
     print(response);
-    setState(() {
-      result = json.decode(response.body);
+    getFromHistory().then((value) => setState(() {
+          historyList = value;
+                result = json.decode(response.body);
       listView = _myListView(context, result, word);
+          
       historyList.add(word);
       addToHistory(historyList);
-    });
+        }));
+    // setState(() {
+    //   result = json.decode(response.body);
+    //   listView = _myListView(context, result, word);
+          
+    //   historyList.add(word);
+    //   addToHistory(historyList);
+    // });
   }
 }
 
-Future navigateToMyHomePage(context) async {
+
+Future navigateToMyHomePages(context) async {
   Navigator.push(context,
       MaterialPageRoute(builder: (context) => historyPage.MyHistoryPage()));
 }
 
-Future navigateToMyHomePages(context) async {
+Future navigateToMyHomePagess(context) async {
   Navigator.push(
-      context, MaterialPageRoute(builder: (context) => favPage.SubPage()));
+      context, MaterialPageRoute(builder: (context) => favPage.MyFavPage()));
 }
 
 Future<bool> addToHistory(List<String> value) async {
@@ -170,8 +180,8 @@ class LogoImageWidget extends StatelessWidget {
     AssetImage logoAsset = AssetImage("images/purple.png");
     Image image = Image(
       image: logoAsset,
-      width: 300.0,
-      height: 200.0,
+      width: 250.0,
+      height: 150.0,
     );
     return Container(child: image);
   }
@@ -196,8 +206,7 @@ Widget _myListView(BuildContext context, List wordList, String word) {
   } else {
     return ListView(children: <Widget>[
       ListTile(
-          title: Text(
-              "KELİME SÖZLÜKTE BULUNAMADI \n WORD NOT FOUND IN DICTIONARY.",
+          title: Text("KELİME BULUNAMADI! \n NO WORDS FOUND!",
               textAlign: TextAlign.center)),
     ]);
   }
