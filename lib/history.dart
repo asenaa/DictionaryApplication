@@ -63,28 +63,11 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.fromLTRB(50, 100, 5, 5),
+              padding: EdgeInsets.fromLTRB(20,20,20,5),
             ),
             Expanded(
               child: listView,
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(50, 100, 50, 5),
-            ),
-            /*RaisedButton(
-              textColor: Colors.white,
-              color: Colors.orange,
-              child: Text('Search Page'),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => mainPage.MyApp()));
-              },
-            ),*/
-            // Padding(
-            //   padding: EdgeInsets.fromLTRB(50, 60, 5, 0),
-            // ),
           ],
         ),
       ),
@@ -140,15 +123,24 @@ Future navigateToMyHomePagess(context) async {
 Widget _myListView(BuildContext context, List wordList) {
   if (wordList != null && wordList.length > 0) {
     return ListView.builder(
+      reverse: true, //reverse listview
         itemCount: wordList.length,
         itemBuilder: (context, index) {
           return ListTile(
             title: Text(wordList[index], textAlign: TextAlign.center,),
+            onTap:(){
+              navigateToMyHomePage(context);
+              //_translate(wordList);
+            },
           );
-        });
+        }
+        );
   } else {
     return ListView(children: <Widget>[
       ListTile(title: Text("History Empty!", textAlign: TextAlign.center)),
     ]);
   }
+  
 }
+
+

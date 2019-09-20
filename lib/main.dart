@@ -137,19 +137,12 @@ class _MyHomePageState extends State<MyHomePage> {
     print(response);
     getFromHistory().then((value) => setState(() {
           historyList = value;
-                result = json.decode(response.body);
-      listView = _myListView(context, result, word);
+          result = json.decode(response.body);
           
-      historyList.add(word);
-      addToHistory(historyList);
+          listView = _myListView(context, result, word);
+          historyList.add(word);
+          addToHistory(historyList);
         }));
-    // setState(() {
-    //   result = json.decode(response.body);
-    //   listView = _myListView(context, result, word);
-          
-    //   historyList.add(word);
-    //   addToHistory(historyList);
-    // });
   }
 }
 
@@ -188,7 +181,7 @@ class LogoImageWidget extends StatelessWidget {
 }
 
 Widget _myListView(BuildContext context, List wordList, String word) {
-  if (word != null && wordList.length > 0) {
+  if (word != null && wordList.length > 0 ) {
     return ListView.builder(
       itemCount: wordList.length,
       itemBuilder: (context, index) {
@@ -211,3 +204,4 @@ Widget _myListView(BuildContext context, List wordList, String word) {
     ]);
   }
 }
+
