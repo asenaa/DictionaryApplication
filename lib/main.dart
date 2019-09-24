@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:dictapp/favorites.dart' as favPage;
+import 'package:dictapp/favorites.dart' as mainPage;
 import 'package:dictapp/history.dart' as historyPage;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,6 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List result = new List();
   ListView listView = ListView();
   List<String> historyList = new List<String>();
+
   final word = new TextEditingController();
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -48,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(50, 30, 50, 0),
+          padding: EdgeInsets.fromLTRB(50, 30, 55, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -119,6 +121,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (index == 0) {
+        navigateToMyHomePage(context);
+      }
       if (index == 1) {
         navigateToMyHomePages(context);
       }
@@ -138,7 +143,6 @@ class _MyHomePageState extends State<MyHomePage> {
     getFromHistory().then((value) => setState(() {
           historyList = value;
           result = json.decode(response.body);
-          
           listView = _myListView(context, result, word);
           historyList.add(word);
           addToHistory(historyList);
@@ -146,6 +150,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+Future navigateToMyHomePage(context) async {
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => mainPage.MyApp()));
+}
 
 Future navigateToMyHomePages(context) async {
   Navigator.push(context,
@@ -181,7 +189,7 @@ class LogoImageWidget extends StatelessWidget {
 }
 
 Widget _myListView(BuildContext context, List wordList, String word) {
-  if (word != null && wordList.length > 0 ) {
+  if (word != null && wordList.length > 0) {
     return ListView.builder(
       itemCount: wordList.length,
       itemBuilder: (context, index) {
@@ -199,9 +207,17 @@ Widget _myListView(BuildContext context, List wordList, String word) {
   } else {
     return ListView(children: <Widget>[
       ListTile(
-          title: Text("KELİME BULUNAMADI! \n NO WORDS FOUND!",
-              textAlign: TextAlign.center)),
+        title: AlertDialog(
+          content: Text("KELİME BULUNAMADI! \n NO WORDS FOUND"),
+          actions: <Widget>[
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+              },
+            ),
+          ],
+        ),
+      ),
     ]);
   }
 }
-
