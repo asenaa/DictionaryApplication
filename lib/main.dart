@@ -212,8 +212,7 @@ Widget _myListView(BuildContext context, List wordList, String word) {
           actions: <Widget>[
             new FlatButton(
               child: new Text("Close"),
-              onPressed: () {
-              },
+              onPressed: () {},
             ),
           ],
         ),

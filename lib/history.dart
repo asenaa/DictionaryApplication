@@ -32,6 +32,7 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
   int _selectedIndex = 1;
   ListView listView = ListView();
   List<String> historyWord = new List<String>();
+  List<String> favList = new List<String>();
 
   @override
   Widget build(BuildContext context) {
@@ -108,18 +109,79 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
           itemBuilder: (context, index) {
             final item = historyWord[index];
             return Dismissible(
+              background: Container(
+                color: Colors.orange,
+                child: Align(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Icon(
+                        Icons.favorite,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Add to Favorites",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.centerLeft,
+                ),
+              ),
+              secondaryBackground: Container(
+                color: Colors.red,
+                child: Align(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        "Delete",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        textAlign: TextAlign.right,
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                    ],
+                  ),
+                  alignment: Alignment.centerRight,
+                ),
+              ),
               key: Key(item),
               onDismissed: (direction) {
-                setState(() {
-                  historyWord.removeAt(index);
-                  remove(historyWord);
-                });
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                    "$item dismissed",
-                  ),
-                  backgroundColor: Colors.orange,
-                ));
+                if (direction == DismissDirection.startToEnd) {
+                  getFromFavorites().then((value) => setState(() {
+                        historyWord = value;
+                        favList = historyWord;
+                        favList.add(item);
+                        addToFavorites(favList);
+                      }));
+                } else if (direction == DismissDirection.endToStart) {
+                  setState(() {
+                    historyWord.removeAt(index);
+                    remove(historyWord);
+                  });
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                      "$item dismissed",
+                    ),
+                    backgroundColor: Colors.orange,
+                  ));
+                }
               },
               child: InkWell(
                   onTap: () {
@@ -136,13 +198,9 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
                         ),
                         textAlign: TextAlign.left,
                       ),
-                      onTap: () {
-                        navigateToMyHomePage(context);
-                      },
+                      onTap: () {},
                     ),
                   ))),
-              background: slideRightBackground(),
-              secondaryBackground: slideLeftBackground(),
             );
           },
         ),
@@ -171,6 +229,7 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
 
   void _clearAllItems() {
     historyWord.clear();
+    remove(historyWord);
   }
 
   void _onItemTapped(int index) {
@@ -184,6 +243,16 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
       }
     });
   }
+}
+
+Future<bool> addToFavorites(List<String> value) async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.setStringList("favorite", value);
+}
+
+Future<List<String>> getFromFavorites() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  return prefs.getStringList("favorite");
 }
 
 Future<bool> remove(List<String> value) async {
@@ -204,62 +273,4 @@ Future navigateToMyHomePage(context) async {
 Future navigateToMyHomePagess(context) async {
   Navigator.push(
       context, MaterialPageRoute(builder: (context) => favPage.MyFavPage()));
-}
-
-Widget slideRightBackground() {
-  return Container(
-    color: Colors.orange,
-    child: Align(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            width: 20,
-          ),
-          Icon(
-            Icons.favorite,
-            color: Colors.white,
-          ),
-          Text(
-            "Add to Favorites",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-            textAlign: TextAlign.left,
-          ),
-        ],
-      ),
-      alignment: Alignment.centerLeft,
-    ),
-  );
-}
-
-Widget slideLeftBackground() {
-  return Container(
-    color: Colors.red,
-    child: Align(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Icon(
-            Icons.delete,
-            color: Colors.white,
-          ),
-          Text(
-            "Delete",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w700,
-            ),
-            textAlign: TextAlign.right,
-          ),
-          SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
-      alignment: Alignment.centerRight,
-    ),
-  );
 }
