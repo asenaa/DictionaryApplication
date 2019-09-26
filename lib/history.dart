@@ -170,6 +170,10 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
                         favList.add(item);
                         addToFavorites(favList);
                       }));
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text("$item added favorites!"),
+                    backgroundColor: Colors.orange,
+                  ));
                 } else if (direction == DismissDirection.endToStart) {
                   setState(() {
                     historyWord.removeAt(index);
@@ -179,7 +183,7 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
                     content: Text(
                       "$item dismissed",
                     ),
-                    backgroundColor: Colors.orange,
+                    backgroundColor: Colors.red,
                   ));
                 }
               },

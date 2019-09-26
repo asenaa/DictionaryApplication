@@ -115,9 +115,9 @@ class _MyFavPageState extends State<MyFavPage> {
                 });
                 Scaffold.of(context).showSnackBar(SnackBar(
                   content: Text(
-                    "$item dismissed",
+                    "$item dismissed!",
                   ),
-                  backgroundColor: Colors.orange,
+                  backgroundColor: Colors.red,
                 ));
               },
               child: InkWell(
