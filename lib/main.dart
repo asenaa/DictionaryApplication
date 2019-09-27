@@ -197,7 +197,10 @@ class LogoImageWidget extends StatelessWidget {
 
 Widget _myListView(BuildContext context, List wordList, String word) {
   if (word != null && wordList.length > 0) {
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Divider(
+        color: Colors.blueGrey,
+      ),
       itemCount: wordList.length,
       itemBuilder: (context, index) {
         if (word == wordList[index]["wordEn"]) {

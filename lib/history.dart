@@ -202,7 +202,8 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
                         ),
                         textAlign: TextAlign.left,
                       ),
-                      onTap: () {},
+                     onTap: () {
+                     }
                     ),
                   ))),
             );
