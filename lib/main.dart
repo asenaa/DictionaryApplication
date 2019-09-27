@@ -50,11 +50,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Padding(
-          padding: EdgeInsets.fromLTRB(50, 30, 55, 0),
+          padding: EdgeInsets.fromLTRB(50, 30, 60, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               LogoImageWidget(),
+              Padding(
+                padding: EdgeInsets.all(10),
+              ),
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: TextField(
@@ -87,7 +90,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Icon(
                   Icons.search,
                   color: Colors.white,
+                  size: 30,
                 ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(20),
               ),
               Expanded(
                 child: listView,
@@ -195,12 +202,21 @@ Widget _myListView(BuildContext context, List wordList, String word) {
       itemBuilder: (context, index) {
         if (word == wordList[index]["wordEn"]) {
           return ListTile(
-              title:
-                  Text(wordList[index]["wordTr"], textAlign: TextAlign.center));
+              leading: CircleAvatar(
+                backgroundColor: Colors.transparent,
+                backgroundImage: NetworkImage(
+                    "http://icons.iconarchive.com/icons/iconscity/flags/256/turkey-icon.png"),
+              ),
+              title: Text(wordList[index]["wordTr"]),
+              subtitle: Text("En -> Tr"));
         } else {
           return ListTile(
-              title: Text(" Tr - En    " + wordList[index]["wordEn"],
-                  textAlign: TextAlign.center));
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    "https://icon-library.net/images/usa-flag-icon-png/usa-flag-icon-png-22.jpg"),
+              ),
+              title: Text(wordList[index]["wordEn"]),
+              subtitle: Text("Tr -> En"));
         }
       },
     );

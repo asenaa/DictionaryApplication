@@ -35,8 +35,8 @@ class _MyFavPageState extends State<MyFavPage> {
   @override
   Widget build(BuildContext context) {
     getFromFavorites().then((value) => setState(() {
-      favWord = value;
-    }));
+          favWord = value;
+        }));
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
@@ -45,7 +45,7 @@ class _MyFavPageState extends State<MyFavPage> {
           FloatingActionButton(
             backgroundColor: Colors.purple[900],
             onPressed: () {
-              if (favWord!= null && favWord.length > 0) {
+              if (favWord != null && favWord.length > 0) {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
