@@ -36,9 +36,13 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    getFromHistory().then((value) => setState(() {
+    
+      getFromHistory().then((value) => setState(() {
           historyWord = value;
         }));
+  
+
+    
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
@@ -106,6 +110,7 @@ class _MyHistoryPageState extends State<MyHistoryPage> {
           reverse: true,
           shrinkWrap: true,
           itemCount: historyWord.length,
+
           itemBuilder: (context, index) {
             final item = historyWord[index];
             return Dismissible(

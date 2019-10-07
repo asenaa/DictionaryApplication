@@ -141,9 +141,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _translate(String word) async {
-    String url = "https://dictionaryapplication.azurewebsites.net/api/word";
+    String url = "http://localhost:57170/api/word";
     url = url + "/" + word;
-    var response = await http.get(Uri.encodeFull(url), headers: {
+    url=Uri.encodeFull(url);
+    var response = await http.get(url, headers: {
       "Accept": "application/json",
     });
     print(response);
@@ -168,8 +169,15 @@ Future navigateToMyHomePages(context) async {
 }
 
 Future navigateToMyHomePagess(context) async {
-  Navigator.push(
+  if(context!=null)
+  {
+    Navigator.push(
       context, MaterialPageRoute(builder: (context) => favPage.MyFavPage()));
+  }
+  else{
+    Text("Data is null");
+  }
+  
 }
 
 Future<bool> addToHistory(List<String> value) async {
